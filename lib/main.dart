@@ -8,11 +8,19 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 const _baseUrl = 'https://jsonplaceholder.typicode.com';
 
 void main() {
-  runApp(const MyApp());
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  late final MockRepo _repo;
+  MyApp({super.key, MockRepo? repo})
+      : _repo = repo ??= MockRepo(
+          dio: Dio(BaseOptions(
+            baseUrl: _baseUrl,
+            contentType: 'application/json',
+            connectTimeout: const Duration(seconds: 2),
+          )),
+        );
 
   // This widget is the root of your application.
   @override
@@ -38,23 +46,25 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: MultiBlocProvider(providers: [
-        BlocProvider(
-          create: (context) => NetworkBloc(
-              mockRepo: MockRepo(
-                  dio: Dio(BaseOptions(
-            baseUrl: _baseUrl,
-            contentType: 'application/json',
-            connectTimeout: const Duration(seconds: 2),
-          )))),
-        )
-      ], child: const MyHomePage(title: 'Flutter Demo Home Page')),
+      home: MultiBlocProvider(
+          providers: [
+            BlocProvider(
+              create: (context) => NetworkBloc(
+                mockRepo: _repo,
+              ),
+            )
+          ],
+          child: MyHomePage(
+            title: 'Flutter Demo Home Page',
+            repo: _repo,
+          )),
     );
   }
 }
 
 class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
+  const MyHomePage({super.key, required this.title, required this.repo});
+  final MockRepo repo;
 
   // This widget is the home page of your application. It is stateful, meaning
   // that it has a State object (defined below) that contains fields that affect
@@ -138,7 +148,9 @@ class _MyHomePageState extends State<MyHomePage> {
           Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => MockViewPage(),
+                builder: (context) => MockViewPage(
+                  repo: widget.repo,
+                ),
               ));
         },
         tooltip: 'Increment',

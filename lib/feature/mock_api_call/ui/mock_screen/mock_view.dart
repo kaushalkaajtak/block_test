@@ -10,7 +10,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 const _baseUrl = 'https://jsonplaceholder.typicode.com';
 
 class MockViewPage extends StatefulWidget {
-  const MockViewPage({super.key});
+  const MockViewPage({super.key, required this.repo});
+  final MockRepo repo;
 
   @override
   State<MockViewPage> createState() => _MockViewPageState();
@@ -25,16 +26,8 @@ class _MockViewPageState extends State<MockViewPage> {
       ),
       body: BlocProvider(
         create: (context) => NetworkBloc(
-            mockRepo: MockRepo(
-          dio: Dio(
-            BaseOptions(
-              baseUrl: _baseUrl,
-              contentType: 'application/json',
-              connectTimeout: const Duration(seconds: 2),
-            ),
-          ),
-        ))
-          ..add(FetchData()),
+          mockRepo: widget.repo
+        )..add(FetchData()),
         child: BlocConsumer<NetworkBloc, NetworkState>(
           listener: (BuildContext context, NetworkState state) {
             if (state is MockInitial) {
@@ -42,7 +35,7 @@ class _MockViewPageState extends State<MockViewPage> {
             }
             if (state is MockLoaded) {
               ScaffoldMessenger.of(context)
-                  .showSnackBar(SnackBar(content: Text('Data Loaded')));
+                  .showSnackBar(const SnackBar(content: Text('Data Loaded')));
             }
           },
           builder: (BuildContext context, NetworkState state) {
@@ -77,6 +70,7 @@ class _MockViewPageState extends State<MockViewPage> {
                 );
               case MockError():
                 return Center(
+                  key: const Key('error'),
                   child: Text(state.error),
                 );
 

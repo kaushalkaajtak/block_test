@@ -15,7 +15,7 @@ class MockDetailView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Mock Detail of $id'),
+        title: const Text('Mock Detail'),
       ),
       body: Column(children: [
         Text(

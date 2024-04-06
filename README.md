@@ -1,16 +1,25 @@
 # block_test
 
-A new Flutter project.
+A Flutter project demostrating unit and integration testing, powered by bloc.
 
-## Getting Started
 
-This project is a starting point for a Flutter application.
+## Dependencies:
 
-A few resources to get you started if this is your first Flutter project:
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+    - flutter_bloc: ^8.1.5
+    - dio: ^5.4.2+1
+    - equatable: ^2.0.5
+    - mockito: ^5.4.4
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+
+## Dev dependencies;
+
+    - flutter_test:
+        sdk: flutter
+
+    - integration_test:
+        sdk: flutter  
+
+    - build_runner:
+
+ 
